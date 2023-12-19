@@ -32,14 +32,14 @@ public class FileService {
 	
 	public ResponseEntity<?> uploadFile(MultipartFile mfile,Long parentId,Long permissionId) {
 		Permissions user=permissionService.findPermissionById(permissionId);
-		String itemName=itemService.findItemById(parentId).getName();
+		String parentItemName=itemService.findItemById(parentId).getName();
 		if(user.getPermission_level().equals("EDIT")) {
 		String fileName=mfile.getOriginalFilename();
 		Files file=new Files();
 		Item item=new Item();
 		try {
 			//create item
-			item.setName(itemName+"/"+fileName);
+			item.setName(parentItemName+"/"+fileName);
 			item.setType("File");
 			item.setPermissionGroup(groupService.findPermissionGroupById(1L));
 			itemService.insert(item);
