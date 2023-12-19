@@ -22,15 +22,15 @@ public class UserAccessController {
 	private ItemService itemService;
 
 	@PostMapping("/add-item/{permissionId}")
-	public ResponseEntity<?> createFolder(@RequestParam String itemName,@RequestParam Long groupId
-			,@RequestParam String parentId,@PathVariable Long permissionId) {
-		return itemService.createItem(itemName,groupId,parentId, permissionId);
+	public ResponseEntity<?> createItem(@RequestParam String itemName,@RequestParam Long groupId
+			,@RequestParam String parentItemId,@PathVariable Long permissionId) {
+		return itemService.createItem(itemName,groupId,parentItemId, permissionId);
 	}
 	
 	@PostMapping("/add-file/{permissionId}")
 	public ResponseEntity<?> uploadFile(@RequestParam MultipartFile file,
-			@RequestParam Long itemId,@PathVariable Long permissionId ) {
-		return fileService.uploadFile(file,itemId,permissionId);
+			@RequestParam Long parentItemId,@PathVariable Long permissionId ) {
+		return fileService.uploadFile(file,parentItemId,permissionId);
 	}
 	
 	@GetMapping("/view/{fileId}/{PermissionId}")
