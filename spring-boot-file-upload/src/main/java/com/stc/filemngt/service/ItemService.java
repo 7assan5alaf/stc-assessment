@@ -10,52 +10,49 @@ import com.stc.filemngt.error.RecordNotFoundException;
 import com.stc.filemngt.repository.ItemReopsitory;
 
 @Service
-public  class ItemService {
-	
+public class ItemService {
+
 	@Autowired
 	private ItemReopsitory itemReopsitory;
 	@Autowired
 	private PermissionService permissionService;
-	
+
 	@Autowired
 	private PermissionGroupService groupService;
-	
-	
+
 	public Item findItemById(Long itemId) {
-		return itemReopsitory.findById(itemId).orElseThrow(
-				()->new RecordNotFoundException("Item Not Found"));
+		return itemReopsitory.findById(itemId).orElseThrow(() -> new RecordNotFoundException("Item Not Found"));
 	}
-	
-    	public  ResponseEntity<?> createItem(String itemName,Long groupId,String parantId,Long permissionId) {
-		Permissions user=permissionService.findPermissionById(permissionId);
-		Item item=new Item();
-		 if(!parantId.isEmpty()) {
-			 String perantItemName=findItemById(Long.parseLong(parantId)).getName();
-				if(user.getPermission_level().equals("EDIT")) {
-					item.setName(perantItemName+"/"+itemName);
-					item.setType("Folder");
-					item.setPermissionGroup(groupService.findPermissionGroupById(groupId));
-					itemReopsitory.save(item);
-					return new ResponseEntity<String>("Folder Added Successfully",HttpStatus.ACCEPTED);
-				}
-		  }
-	   else {
-		
-			 if(user.getPermission_level().equals("EDIT")) {
-					item.setName(itemName);
-					item.setType("Space");
-					item.setPermissionGroup(groupService.findPermissionGroupById(groupId));
-					itemReopsitory.save(item);
-					return new ResponseEntity<String>("Space Added Successfully",HttpStatus.ACCEPTED);
-				}
-    	}
-		
-		return new ResponseEntity<String>("Not Allowed",HttpStatus.FORBIDDEN);
+
+	public ResponseEntity<?> createItem(String itemName, Long groupId, String parantItemId, Long permissionId) {
+		Permissions permission = permissionService.findPermissionById(permissionId);
+		Item item = new Item();
+		if (!parantItemId.isEmpty()) {
+			String perantItemName = findItemById(Long.parseLong(parantItemId)).getName();
+			if (permission.getPermission_level().equals("EDIT")) {
+				item.setName(perantItemName + "\\\\" + itemName);
+				item.setType("Folder");
+				item.setPermissionGroup(groupService.findPermissionGroupById(groupId));
+				itemReopsitory.save(item);
+				return new ResponseEntity<String>("Folder Added Successfully", HttpStatus.ACCEPTED);
+			}
+		} else {
+
+			if (permission.getPermission_level().equals("EDIT")||
+					permission.getPermission_level().equals("VIEW")) {
+				item.setName(itemName);
+				item.setType("Space");
+				item.setPermissionGroup(groupService.findPermissionGroupById(groupId));
+				itemReopsitory.save(item);
+				return new ResponseEntity<String>("Space Added Successfully", HttpStatus.ACCEPTED);
+			}
+		}
+
+		return new ResponseEntity<String>("Not Allowed", HttpStatus.FORBIDDEN);
 	}
-    	
-    	
+
 	public void insert(Item item) {
 		itemReopsitory.save(item);
 	}
-	
+
 }

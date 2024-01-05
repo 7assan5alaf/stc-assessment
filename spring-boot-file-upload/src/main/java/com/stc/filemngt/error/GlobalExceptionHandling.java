@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.stc.filemngt.view.ErrorResponse;
+import com.stc.filemngt.response.ErrorResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandling extends ResponseEntityExceptionHandler{

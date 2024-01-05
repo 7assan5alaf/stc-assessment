@@ -1,11 +1,15 @@
 package com.stc.filemngt.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,15 +19,17 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String type;
-    private String name;
-    
-    @ManyToOne
-    @JoinColumn(columnDefinition = "permission_group_id",referencedColumnName = "id")
-    private PermissionGroup permissionGroup;
-    
+	private String name;
+
+	@ManyToOne
+	@JoinColumn(columnDefinition = "permission_group_id", referencedColumnName = "id")
+	private PermissionGroup permissionGroup;
+
+	@OneToMany(mappedBy = "item")
+	private List<FileStorage>fileStorages=new ArrayList<FileStorage>();
 	public Item() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Long getId() {
@@ -50,8 +56,6 @@ public class Item {
 		this.name = name;
 	}
 
-
-
 	public PermissionGroup getPermissionGroup() {
 		return permissionGroup;
 	}
@@ -60,8 +64,4 @@ public class Item {
 		this.permissionGroup = permissionGroup;
 	}
 
-	
-    
-    
-    
 }
